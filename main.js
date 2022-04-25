@@ -477,14 +477,14 @@ init = function() {
 		row.appendChild(cell);
 	}
 	
-	function newGame() {
+	function newLocalGame() {
 		Game.game = new FourInARow(Negamax.randInt(9)+1, Negamax.randInt(9)+1);
 		Game.botTurn = false;
 		Game.drawBoard();
 	}
 	
-	e('newGame').addEventListener('click', newGame);
-	newGame();
+	e('newLocalGame').addEventListener('click', newLocalGame);
+	newLocalGame();
 }
 
 if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', init);
