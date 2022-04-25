@@ -110,7 +110,7 @@
  
 // Version Information
 
-const version = 'v. alpha-2022-04-18-a'
+const version = 'v. alpha 2022-04-24-a'
 
 /** Class representing a game of Four In A Row. */
 class FourInARow {
