@@ -1,0 +1,344 @@
+/******************************************************************************
+ * Welcome style.css, this won't be as well commented as main.js was, but I hope you find it well organized.
+ *****************************************************************************/
+
+:root {
+	--fgNotice: rgb(15, 11, 7);
+	--fg: rgb(31, 27, 23);
+	--fgWarn: rgb(231, 27, 23);
+	--bg: rgb(239, 235, 231);
+	--marker1: rgb(150, 150, 240);
+	--marker2: rgb(150, 240, 150);
+	--markerWarn: rgb(240, 150, 150);
+	--player1: rgba(150, 150, 240, 1);
+	--player2: rgba(150, 240, 150, 1);
+}
+
+/******************************************************************************
+ * Default
+ *****************************************************************************/
+
+* {
+	margin: 0;
+	padding: 0;
+	border: 0;
+	font-size: 100%;
+	font: inherit;
+	vertical-align: baseline;
+}
+
+html,body {
+	width: 100%;
+	height: 100%;
+}
+
+body {
+	touch-action: manipulation;
+	color: var(--fg);
+	background: var(--bg);
+	font-family: Arial, sans-serif;
+	font-size: 1em;
+	line-height: 1;
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+body:hover {
+	cursor: default;
+}
+
+a, a:visited {
+	text-decoration: underline;
+	cursor: pointer;
+	color: var(--fgNotice);
+}
+
+a:hover, a:active {
+	cursor: pointer;
+	text-shadow: 0 0 0.1em var(--fg);
+}
+
+a:hover > img, a:active > img {
+	box-shadow: 0 0 0.25em var(--fg);
+}
+
+/******************************************************************************
+ * Animation Keyframes
+ *****************************************************************************/
+ 
+@keyframes appearLate {
+	0% {
+		opacity: 0;
+	}
+	95% {
+		opacity: 0;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+@keyframes blink {
+	0% {
+		opacity: 1;
+	}
+	50% {
+		opacity: 0.875;
+	}
+	100% {
+		opacity: 1;
+	}
+}
+
+/******************************************************************************
+ * title Classes
+ *****************************************************************************/
+
+.title, .titleCentered {
+	padding-top: 8px;
+	padding-bottom: 8px;
+	width: 100%;
+	font-size: 2em;
+	color: var(--fgNotice);
+	text-shadow: 0 0 0.25em var(--fg);
+}
+
+.titleCentered {
+	text-align: center;
+}
+
+.title::after, .titleCentered::after, .title::before, .titleCentered::before {
+	content: '';
+	width: 100%;
+	height: 1px;
+	display: block;
+}
+
+.title::before, .titleCentered::before {
+	margin: 0 0 0.25em 0;
+}
+
+.title::after, .titleCentered::after {
+	margin: 0.25em 0 0 0;
+}
+
+.titleCentered::after, .titleCentered::before {
+	background: linear-gradient(to right, transparent, transparent, var(--fg), transparent, transparent);
+}
+
+.title::after, .title::before {
+	background: linear-gradient(to right, var(--fg), transparent, transparent, transparent, transparent);
+}
+
+/******************************************************************************
+ * float Classes
+ *****************************************************************************/
+
+.left {
+	float: left;
+}
+
+.right {
+	float: right;
+}
+
+.middle {
+	width: auto;
+	overflow: hidden;
+}
+
+/******************************************************************************
+ * other Classes
+ *****************************************************************************/
+
+.blink {
+	animation-name: blink;
+	animation-iteration-count: infinite;
+	animation-duration: 2s;
+	animation-timing-function: ease-in-out;
+}
+
+.bottomPadding {
+	width: 100%;
+	height: 100px;
+}
+
+/******************************************************************************
+ * wrapper Div
+ *****************************************************************************/
+
+#wrapper {
+	position: absolute;
+	left: 0;
+	top: 0;
+	right: 0;
+	bottom: 0;
+	width: 100%;
+	height: 100%;
+}
+
+/******************************************************************************
+ * topBar Div
+ *****************************************************************************/
+
+#topBar {
+	position: absolute;
+	left: 0;
+	top: 0;
+	width: 100%;
+	height: calc(1em + 16px);
+	overflow: auto;
+	border-bottom: 1px solid var(--fg);
+}
+
+#topBar > div {
+	padding: 8px;
+	height: 1em;
+}
+
+/******************************************************************************
+ * game Div
+ *****************************************************************************/
+
+#game {
+	position: absolute;
+	left: 0;
+	top: calc(1em + 17px);
+	right: 0;
+	bottom: 0;
+	height: auto;
+	width: 100%;
+	overflow: hidden;
+}
+
+#game:hover {
+	cursor: default;
+}
+
+#game > #messageBox {
+	margin-top: 9px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 9px;
+	background-color: white;
+	display: table;
+	padding: 4.5px;
+	width: 10em;
+}
+
+#game > #messageBox > div > div {
+	float: left;
+	font-size: 2em;
+	margin: 4.5px;
+	background-color: var(--bg);
+	height: 2em;
+	width: calc(12em + 45px);
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-content: center;
+	flex-direction: column;
+}
+
+#game > #topBoard {
+	margin-top: 9px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-bottom: 9px;
+	background-color: white;
+	display: table;
+	padding: 4.5px;
+}
+
+#game > #topBoard > div > div {
+	float: left;
+	font-size: 2em;
+	margin: 4.5px;
+	background-color: var(--bg);
+	height: 2em;
+	width: 2em;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-content: center;
+	flex-direction: column;
+}
+
+#game > #botBoard {
+	margin-top: 9px;
+	margin-left: auto;
+	margin-right: auto;
+	background-color: white;
+	display: table;
+	padding: 4.5px;
+}
+
+#game > #botBoard > div > div {
+	float: left;
+	font-size: 2em;
+	margin: 4.5px;
+	background-color: var(--bg);
+	height: 2em;
+	width: 2em;
+	display: flex;
+	justify-content: center;
+	text-align: center;
+	align-content: center;
+	flex-direction: column;
+}
+
+.clip1 {
+	background: linear-gradient(0deg, var(--marker1) 20%, rgba(0, 0, 0, 0) 20%);
+}
+
+.clip1.active {
+	background: linear-gradient(0deg, var(--marker1) 20%, var(--markerWarn) 20%);
+}
+
+.clip2 {
+	background: linear-gradient(0deg, rgba(0, 0, 0, 0) 80%, var(--marker2) 80%);
+}
+
+.clip2.active {
+	background: linear-gradient(0deg, var(--markerWarn) 80%, var(--marker2) 80%);
+}
+
+.clip1.clip2 {
+	background: linear-gradient(0deg, var(--marker1) 20%, rgba(0, 0, 0, 0) 20%, rgba(0, 0, 0, 0) 80%, var(--marker2) 80%);
+}
+
+.clip1.clip2.active {
+	background: linear-gradient(0deg, var(--marker1) 20%, var(--markerWarn) 20%, var(--markerWarn) 80%, var(--marker2) 80%);
+}
+
+.player1 {
+	background: var(--player1) !important;
+}
+
+.player2 {
+	background: var(--player2) !important;
+}
+
+/******************************************************************************
+ * game Div > gameLoading Div
+ *****************************************************************************/
+
+#gameLoading {
+	position: absolute;
+	left: 50%;
+	transform: translate(-50%);
+	max-width: 40em;
+}
+
+#gameLoadingWarning {
+	color: var(--fgWarn);
+	text-align: center;
+	animation-name: appearLate;
+	animation-iteration-count: 1;
+	animation-duration: 10s;
+	animation-timing-function: ease-out;
+}
