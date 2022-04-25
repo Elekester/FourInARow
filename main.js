@@ -6,7 +6,7 @@
  * Changelog:
  * 
  * March 24, 2022                                         v. alpha 2022-04-24-a
- * - Added GUI for human play.
+ * - Added GUI for local human play.
  *
  * March 18, 2022                                         v. alpha 2022-04-18-a
  * - Began creating website. Currently the board appears, though nothing is
@@ -267,7 +267,7 @@ class FourInARow {
 	 * @param {number} depth - The depth that negamax should be searched at.
 	 * @requires Negamax
 	 */
-	static demo(depth) {
+	static demo(depth = 1) {
 		let game = new FourInARow(Negamax.randInt(9) + 1, Negamax.randInt(9) + 1);
 		game.log();
 		while (!game.terminal) {
@@ -284,7 +284,7 @@ class FourInARow {
 	 * @param {number} depth - The depth that negamax should be searched at.
 	 * @requires Negamax
 	 */
-	static demoHuman(depth) {
+	static demoHuman(depth = 1) {
 		let game = new FourInARow(Negamax.randInt(9) + 1, Negamax.randInt(9) + 1);
 		game.log();
 		let human = Negamax.randInt(2);
@@ -329,7 +329,7 @@ Negamax = {};
 Negamax.negamax = function(node, depth, a = -Infinity, b = Infinity, turn = 1) {
 	if (depth === 0 || node.terminal) return (turn * node.heuristicValue);
 	let children = node.children;
-	children = Negamax.orderNodes(children);
+	children = Negamax.orderNodes(children, turn);
 	let value = -Infinity;
 	for (const child of children) {
 		value = Math.max(value, -Negamax.negamax(child, depth - 1, -b, -a, -turn));
@@ -345,8 +345,8 @@ Negamax.negamax = function(node, depth, a = -Infinity, b = Infinity, turn = 1) {
  * @param {number} nodes[i].heuristicValue - The heuristic value of nodes[i], for any i. Possibly a getter.
  * @returns {Object[]} The ordered nodes.
  */
-Negamax.orderNodes = function(nodes) {
-	return nodes.map((node) => [node, node.heuristicValue]).sort((a,b) => b[1] - a[1]).map((node) => node[0]);
+Negamax.orderNodes = function(nodes, turn) {
+	return nodes.map((node) => [node, turn * node.heuristicValue]).sort((a,b) => b[1] - a[1]).map((node) => node[0]);
 }
 
 /**
