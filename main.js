@@ -400,7 +400,7 @@ Game.drawBoard = function() {
 			if (!Game.botGame) {
 				e('turnDisplay').innerText = 'Player 1 Wins!';
 			} else {
-				e('turnDisplay').innerText = (!Game.botTurn ? 'You Win!' : 'CPU Win\'s');
+				e('turnDisplay').innerText = (!Game.botTurn ? 'CPU Win\'s' : 'You Win!');
 			}
 		} else if (Game.game.heuristicValue === -Infinity) {
 			e('turnDisplay').className = 'player2';
@@ -505,17 +505,28 @@ init = function() {
 	
 	function newLocalGame() {
 		Game.game = new FourInARow(Negamax.randInt(9)+1, Negamax.randInt(9)+1);
+		Game.botDepth = 1;
 		Game.botGame = false;
 		Game.botTurn = false;
-		Game.botDepth = 1;
 		Game.drawBoard();
 	}
 	
 	function newCPUGame() {
 		Game.game = new FourInARow(Negamax.randInt(9)+1, Negamax.randInt(9)+1);
-		Game.botGame = true;
-		Game.botTurn = false;
 		Game.botDepth = 2*parseInt(e('difficulty').value);
+		Game.botGame = true;
+		Game.botTurn = Negamax.randInt(2);
+		if (Game.botTurn) {
+			Game.drawBoard();
+			setTimeout(function() {
+				let children = Game.game.children;
+				children = children.map((child) => [child.n, child.m, -Negamax.negamax(child, Game.botDepth - 1, -Infinity, Infinity, child.turn)]);
+				children.sort((a, b) => b[2] - a[2]);
+				Game.game.makeMove(...children[0].slice(0,2));
+				Game.botTurn = false;
+				Game.drawBoard();
+			}, 100);
+		}
 		Game.drawBoard();
 	}
 	
