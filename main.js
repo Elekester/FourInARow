@@ -1,9 +1,11 @@
 /******************************************************************************
  * Four In A Row
  * 
- * v. alpha-2022-04-18-a
+ * v. beta 2022-04-27
  ******************************************************************************
  * Changelog:
+ * 
+ * March 27, 2022                                            v. beta 2022-04-27
  * 
  * March 24, 2022                                         v. alpha 2022-04-24-a
  * - Added GUI for local human play.
@@ -50,7 +52,7 @@
  *        [x] a. Create an AI vs. AI demo.
  *        [x] b. Create a Human vs. AI demo.
  * [x] 6. Create a GUI.
- * [ ] 7. Implement CPU play for GUI.
+ * [x] 7. Implement CPU play for GUI.
  * [ ] 8. Implement transposition tables for negamax.
  ******************************************************************************
  * Introduction:
@@ -110,7 +112,7 @@
  
 // Version Information
 
-const version = 'v. alpha 2022-04-24-a'
+const version = 'v. beta 2022-04-27'
 
 /** Class representing a game of Four In A Row. */
 class FourInARow {
@@ -387,29 +389,41 @@ Game.drawBoard = function() {
 	if (!Game.game.terminal) {
 		let turn = Game.game.turn === 1 ? 1 : 2;
 		e('turnDisplay').className = 'player' + turn;
-		e('turnDisplay').innerText = 'Player ' + turn + '\'s Turn'
+		if (!Game.botGame) {
+			e('turnDisplay').innerText = 'Player ' + turn + '\'s Turn';
+		} else {
+			e('turnDisplay').innerText = (Game.botTurn ? 'CPU\'s Turn' : 'Your Turn');
+		}
 	} else {
 		if (Game.game.heuristicValue === Infinity) {
 			e('turnDisplay').className = 'player1';
-			e('turnDisplay').innerText = 'Player 1 Wins!'
+			if (!Game.botGame) {
+				e('turnDisplay').innerText = 'Player 1 Wins!';
+			} else {
+				e('turnDisplay').innerText = (!Game.botTurn ? 'You Win!' : 'CPU Win\'s');
+			}
 		} else if (Game.game.heuristicValue === -Infinity) {
 			e('turnDisplay').className = 'player2';
-			e('turnDisplay').innerText = 'Player 2 Wins!'
+			if (!Game.botGame) {
+				e('turnDisplay').innerText = 'Player 2 Wins!';
+			} else {
+				e('turnDisplay').innerText = (!Game.botTurn ? 'CPU Win\'s' : 'You Win!')
+			}
 		} else {
 			e('turnDisplay').className = 'playerDraw';
-			e('turnDisplay').innerText = 'It\'s A Draw!'
+			e('turnDisplay').innerText = 'It\'s A Draw!';
 		}
 	}
 }
 
 Game.clicked = function() {
-	if (Game.game.terminal || Game.botTurn) return 0;
+	let oldTurn = Game.game.turn;
+	if (Game.game.terminal || (Game.botTurn && Game.botGame)) return 0;
 	if (!Game.active && this.className !== '') {
 		Game.active = [this.classList[0], this.id.slice(6)]; // [Clip to move, it's marker position.]
 		this.classList.add('active');
 	} else if (Game.active) {
 		if (this.id.slice(6) !== Game.active[1]) {
-			// Check if move is legal. Break if it ain't.
 			let [n, m] = [Game.game.n, Game.game.m];
 			if (Game.active[0] === 'clip1') {n = this.id.slice(6)}
 			else {m = this.id.slice(6)}
@@ -424,6 +438,18 @@ Game.clicked = function() {
 		}
 		e('marker' + Game.active[1]).classList.remove('active');
 		Game.active = 0;
+	}
+	if (Game.botGame && Game.game.turn !== oldTurn && !Game.game.terminal) {
+		Game.botTurn = true;
+		Game.drawBoard();
+		setTimeout(function() {
+			let children = Game.game.children;
+			children = children.map((child) => [child.n, child.m, -Negamax.negamax(child, Game.botDepth - 1, -Infinity, Infinity, child.turn)]);
+			children.sort((a, b) => b[2] - a[2]);
+			Game.game.makeMove(...children[0].slice(0,2));
+			Game.botTurn = false;
+			Game.drawBoard();
+		}, 50);
 	}
 }
 
@@ -479,11 +505,23 @@ init = function() {
 	
 	function newLocalGame() {
 		Game.game = new FourInARow(Negamax.randInt(9)+1, Negamax.randInt(9)+1);
+		Game.botGame = false;
 		Game.botTurn = false;
+		Game.botDepth = 1;
+		Game.drawBoard();
+	}
+	
+	function newCPUGame() {
+		Game.game = new FourInARow(Negamax.randInt(9)+1, Negamax.randInt(9)+1);
+		Game.botGame = true;
+		Game.botTurn = false;
+		Game.botDepth = 2*parseInt(e('difficulty').value);
 		Game.drawBoard();
 	}
 	
 	e('newLocalGame').addEventListener('click', newLocalGame);
+	e('newCPUGame').addEventListener('click', newCPUGame);
+	e('difficulty').addEventListener('input', function() {Game.botDepth = 2*parseInt(this.value)});
 	newLocalGame();
 }
 
