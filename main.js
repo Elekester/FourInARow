@@ -400,14 +400,14 @@ Game.drawBoard = function() {
 			if (!Game.botGame) {
 				e('turnDisplay').innerText = 'Player 1 Wins!';
 			} else {
-				e('turnDisplay').innerText = (!Game.botTurn ? 'CPU Win\'s' : 'You Win!');
+				e('turnDisplay').innerText = (!Game.botTurn ? 'You Win!' : 'CPU Wins');
 			}
 		} else if (Game.game.heuristicValue === -Infinity) {
 			e('turnDisplay').className = 'player2';
 			if (!Game.botGame) {
 				e('turnDisplay').innerText = 'Player 2 Wins!';
 			} else {
-				e('turnDisplay').innerText = (!Game.botTurn ? 'CPU Win\'s' : 'You Win!')
+				e('turnDisplay').innerText = (!Game.botTurn ? 'CPU Wins' : 'You Win!')
 			}
 		} else {
 			e('turnDisplay').className = 'playerDraw';
